@@ -78,6 +78,8 @@ public:
     virtual int GetCount() const = 0;
 };
 
+//////////////////////////////////////////////////////////////
+//ВЕКТОР КОНТЕЙНЕР
 
 class VectorContainer : public InstrumentContainer // контейнер-вектор
 {
@@ -89,6 +91,9 @@ public:
     int GetCount() const override { return Instruments.size(); }
     InstrPtr getInstrument(int index) const override { return Instruments[index]; }
 };
+
+//////////////////////////////////////////////////////////////
+//МАССИВ КОНТЕЙНЕР
 
 class ArrayContainer : public InstrumentContainer // контейнер-массив
 {
