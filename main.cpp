@@ -124,6 +124,7 @@ void DecoratorTask(Iterator<InstrPtr> *it)
 }
 
 //////////////////////////////////////////////////
+//СОЗДАНИЕ ИНСТРУМЕНТОВ
 
 StringInstrument *CreateInstrument(InstrumentType type)
 {
@@ -144,6 +145,19 @@ StringInstrument *StringInstrument::Create(InstrumentType type)
 
 
 //////////////////////////////////////////////////////////
+//ЗАДАНИЕ БД
+
+void Task_DB(Iterator<InstrumentInfo>* it) {
+    for (it->First(); !it->IsDone(); it->Next()) {
+        const InstrumentInfo currentInstrument = it->GetCurrent();
+        wcout << L"Инструмент: " << currentInstrument.name << endl;
+        wcout << L"Число струн: " << currentInstrument.strings_count << endl;
+        wcout << L"Чистый: " << (currentInstrument.clean ? L"Да" : L"Нет") << endl;
+        wcout << L"Настроенный: " << (currentInstrument.tune ? L"Да" : L"Нет") << endl;
+        wcout << L"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+    }
+}
+
 
 int main()
 {
@@ -170,22 +184,36 @@ int main()
     //Task1(&Box);
     //Task2(&Box);
 
-    //Декоратор: чистая, не настроенная скрипка с 2 струнами
-    Iterator<InstrPtr> *it = new InstrCleanedIteratorDecorator(
+    //Декоратор: чистая, не настроенная скрипка с 2 струнами (не всегда попадается такой набор, так что лучше запустить несколько раз)
+    /*Iterator<InstrPtr> *it = new InstrCleanedIteratorDecorator(
                             new InstrTunedIteratorDecorator(
                             new InstrStringsIteratorDecorator(
                             new InstrTypeIteratorDecorator(Box.GetIterator(), InstrumentType::Violin), 2), false), true);
 
+    */
+    ////////БД
+
+    DatabaseBox dbBox;
+    Iterator<InstrumentInfo> *it = dbBox.GetIterator();
+
+    for (int i = 0; i < 20; ++i) {
+        dbBox.addRow();
+    }
+
     if(it)
     {
-        DecoratorTask(it);
+
         //Task_It(it);
+        //DecoratorTask(it);
+        Task_DB(it);
         delete it;
     }
     else
     {
         wcout << L"ошибка создания итератора" << endl;
     }
+
+    dbBox.clearTable();
 
     return 0;
 }

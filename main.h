@@ -293,7 +293,7 @@ public:
 /////////////////////////////////////////////////////
 //РАЗДЕЛ БАЗА ДАННЫХ
 
-struct InstrumentInfo {
+struct InstrumentInfo { //структура для вывода столбцов таблицы
     std::wstring name;
     int strings_count;
     bool clean;
@@ -311,16 +311,21 @@ public:
     void First() { sqlite3_reset(pStatement); }
     void Next() { sqlite3_step(pStatement); }
     bool IsDone() const { return sqlite3_step(pStatement) != SQLITE_ROW; }
+
     InstrumentInfo GetCurrent() const {
         InstrumentInfo info;
-        // Здесь вы должны получить данные из каждого столбца результата запроса
-        // и преобразовать их в соответствующий формат InstrumentInfo
         info.name = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(pStatement, 0));
         info.strings_count = sqlite3_column_int(pStatement, 1);
         info.clean = sqlite3_column_int(pStatement, 2);
         info.tune = sqlite3_column_int(pStatement, 3);
         return info;
     }
+    ~DatabaseBoxIterator() {
+    if (pStatement != nullptr) {
+        sqlite3_finalize(pStatement); // освобождаем ресурс только если он был выделен
+    }
+}
+
 };
 
 
@@ -330,6 +335,7 @@ private:
     sqlite3* Database;
     char *errmsg;
     int openResult;
+    sqlite3_stmt* statement;
 public:
     DatabaseBox()
     {
@@ -344,10 +350,18 @@ public:
     virtual void addRow();
     virtual void clearTable();
     virtual Iterator<InstrumentInfo>* GetIterator();
-    ~DatabaseBox() { sqlite3_close(Database); }
+    ~DatabaseBox() {
+    if (Database != nullptr) {
+        sqlite3_close(Database); // закрываем базу данных только если она была открыта
+    }
+    if (statement != nullptr) {
+        sqlite3_finalize(statement); // освобождаем ресурс только если он был выделен
+    }
+}
+
 };
 
-void DatabaseBox::addRow()
+void DatabaseBox::addRow() //добавление рандомной строки
 {
   InstrumentType type = static_cast<InstrumentType>(rand()%4);
   string name;
@@ -374,7 +388,7 @@ void DatabaseBox::addRow()
   }
 }
 
-void DatabaseBox::clearTable()
+void DatabaseBox::clearTable() // очищение таблицы
 {
     string delete_query = "DELETE FROM StringsInstruments;";
     int execResult = sqlite3_exec(Database, delete_query.c_str(), NULL, NULL, &errmsg);
@@ -383,10 +397,14 @@ void DatabaseBox::clearTable()
         cout << errmsg << endl;
         wcout << L"Ошибка очистки таблицы" << endl;
     }
+    else
+    {
+        wcout << L"Таблица очищена" << endl;
+    }
 }
 
 Iterator<InstrumentInfo>* DatabaseBox::GetIterator() {
-    sqlite3_stmt* statement;
+
     const char* select_query = "SELECT * FROM StringsInstruments;";
     int prepareResult = sqlite3_prepare_v2(Database, select_query, -1, &statement, NULL);
     if (prepareResult != SQLITE_OK) {
