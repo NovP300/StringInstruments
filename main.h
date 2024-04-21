@@ -167,4 +167,126 @@ public:
 };
 
 
+/////////////////////////////////////////////////////////////
+//РАЗДЕЛ ДЕКОРАТОРЫ
+
+class InstrTunedIteratorDecorator : public IteratorDecorator<InstrPtr> //декоратор настройки инструмента
+{
+private:
+    bool TunedOK;
+
+public:
+    InstrTunedIteratorDecorator(Iterator<InstrPtr> *it, bool tunedOK) : IteratorDecorator(it)
+    {
+        TunedOK = tunedOK;
+    }
+
+    void First()
+    {
+        It->First();
+        while(!It->IsDone() && It->GetCurrent()->IsTuned() != TunedOK)
+        {
+            It->Next();
+        }
+    }
+
+    void Next()
+    {
+        do
+        {
+            It->Next();
+        } while(!It->IsDone() && It->GetCurrent()->IsTuned() != TunedOK);
+    }
+};
+
+class InstrTypeIteratorDecorator : public IteratorDecorator<InstrPtr> // декоратор типа инструмента
+{
+private:
+    InstrumentType TargetType;
+
+public:
+    InstrTypeIteratorDecorator(Iterator<InstrPtr> *it, InstrumentType targetType) : IteratorDecorator(it)
+    {
+        TargetType = targetType;
+    }
+
+    void First()
+    {
+        It->First();
+        while(!It->IsDone() && It->GetCurrent()->GetType() != TargetType)
+        {
+            It->Next();
+        }
+    }
+
+    void Next()
+    {
+        do
+        {
+            It->Next();
+        } while(!It->IsDone() && It->GetCurrent()->GetType() != TargetType);
+    }
+
+    InstrPtr GetCurrent() const override { return It->GetCurrent(); }
+};
+
+class InstrCleanedIteratorDecorator : public IteratorDecorator<InstrPtr> // декоратор чистоты инструмента
+{
+private:
+    bool CleanedOK;
+
+public:
+    InstrCleanedIteratorDecorator(Iterator<InstrPtr> *it, bool cleanedOK) : IteratorDecorator(it)
+    {
+        CleanedOK = cleanedOK;
+    }
+
+    void First()
+    {
+        It->First();
+        while(!It->IsDone() && It->GetCurrent()->IsCleaned() != CleanedOK)
+        {
+            It->Next();
+        }
+    }
+
+    void Next()
+    {
+        do
+        {
+            It->Next();
+        } while(!It->IsDone() && It->GetCurrent()->IsCleaned() != CleanedOK);
+    }
+};
+
+class InstrStringsIteratorDecorator : public IteratorDecorator<InstrPtr> // декоратор чистоты инструмента
+{
+private:
+    int Strings_count;
+
+public:
+    InstrStringsIteratorDecorator(Iterator<InstrPtr> *it, int strings_count) : IteratorDecorator(it)
+    {
+        Strings_count = strings_count;
+    }
+
+    void First()
+    {
+        It->First();
+        while(!It->IsDone() && It->GetCurrent()->GetStringsNumber() != Strings_count)
+        {
+            It->Next();
+        }
+    }
+
+    void Next()
+    {
+        do
+        {
+            It->Next();
+        } while(!It->IsDone() && It->GetCurrent()->GetStringsNumber() != Strings_count);
+    }
+};
+
+
 #endif // MainH

@@ -11,3 +11,22 @@ public:
     virtual bool IsDone() const = 0;
     virtual Type GetCurrent() const = 0;
 };
+
+template<class Type>
+class IteratorDecorator : public Iterator<Type>
+{
+protected:
+    Iterator<Type> *It;
+
+public:
+    IteratorDecorator(Iterator<Type> *it)
+    {
+        It = it;
+    }
+    virtual ~IteratorDecorator() { delete It; }
+    void First() { It->First(); }
+    void Next() { It->Next(); }
+    bool IsDone() const { return It->IsDone(); }
+    Type GetCurrent() const { return It->GetCurrent(); }
+
+};
