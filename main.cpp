@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include<ctime>
 #include <vector>
+#include "sqlite3.h"
 
 using namespace std;
 

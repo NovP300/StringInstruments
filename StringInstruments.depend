@@ -1,13 +1,80 @@
 # depslib dependency file v1.0
-1713734172 source:c:\codeblocksprojects\stringinstruments\main.cpp
+1713734554 source:c:\codeblocksprojects\stringinstruments\main.cpp
 	<iostream>
 	<cstdlib>
 	<ctime>
 	<vector>
+	"sqlite3.h"
 	"main.h"
 
-1713734111 c:\codeblocksprojects\stringinstruments\main.h
+1713734697 c:\codeblocksprojects\stringinstruments\main.h
 	"Pattern.h"
 
 1713733706 c:\codeblocksprojects\stringinstruments\pattern.h
+
+1713734291 source:c:\codeblocksprojects\stringinstruments\sqlite3.c
+	<vxWorks.h>
+	<pthread.h>
+	"mingw.h"
+	"_mingw.h"
+	<stdarg.h>
+	"sqlite_cfg.h"
+	<stdint.h>
+	<inttypes.h>
+	<intrin.h>
+	<cmnintrin.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	<stddef.h>
+	<TargetConditionals.h>
+	<ctype.h>
+	<time.h>
+	<sys/sysctl.h>
+	<malloc/malloc.h>
+	<libkern/OSAtomic.h>
+	<malloc.h>
+	<pthread.h>
+	"windows.h"
+	<sys/cygwin.h>
+	<errno.h>
+	<process.h>
+	<math.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<sys/time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<sys/time.h>
+	<errno.h>
+	<sys/mman.h>
+	<sys/file.h>
+	<sys/param.h>
+	<semaphore.h>
+	<limits.h>
+	<sys/mount.h>
+	<utime.h>
+	<sys/dcmd_blk.h>
+	<sys/statvfs.h>
+	<dlfcn.h>
+	<Windows.h>
+	"sqlite_tcl.h"
+	"tcl.h"
+	"sqlite3rtree.h"
+	<ctype.h>
+	<unicode/utypes.h>
+	<unicode/uregex.h>
+	<unicode/ustring.h>
+	<unicode/ucol.h>
+	<unicode/ubrk.h>
+	<unicode/utf16.h>
+	<math.h>
+
+1713734291 c:\codeblocksprojects\stringinstruments\sqlite3.h
+	<stdarg.h>
 

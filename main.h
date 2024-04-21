@@ -290,4 +290,77 @@ public:
 };
 
 
+/////////////////////////////////////////////////////
+//РАЗДЕЛ БАЗА ДАННЫХ
+
+struct InstrumentInfo {
+    std::wstring name;
+    int strings_count;
+    bool clean;
+    bool tune;
+};
+
+
+class DatabaseBox
+{
+private:
+    sqlite3* Database;
+    char *errmsg;
+    int openResult;
+public:
+    DatabaseBox()
+    {
+        openResult = sqlite3_open16(
+            L"C:\\CodeBlocksProjects\\StringInstruments\\Instruments.db",
+            &Database);
+        if(openResult != SQLITE_OK)
+        {
+            wcout << L"Ошибка открытия базы данных!" << endl;
+        }
+    }
+    virtual void addRow();
+    virtual void clearTable();
+    ~DatabaseBox() { sqlite3_close(Database); }
+};
+
+void DatabaseBox::addRow()
+{
+  InstrumentType type = static_cast<InstrumentType>(rand()%4);
+  string name;
+  switch(type)
+  {
+      case InstrumentType::Violin: name = "Violin"; break;
+      case InstrumentType::Alto: name = "Alto"; break;
+      case InstrumentType::Cello: name = "Cello"; break;
+      case InstrumentType::Contrabass: name = "Contrabass"; break;
+  }
+
+  int strings_count = rand() % 5;
+  bool clean = rand() % 2;
+  bool tune = rand() % 2;
+  string insert_query = "INSERT INTO StringsInstruments (name, strings_count, clean, tune) VALUES ('" +name+ "'," +to_string(strings_count)+ ","
+        +to_string(clean)+ "," +to_string(tune)+ ");";
+
+  int execResult = sqlite3_exec(Database, insert_query.c_str(), NULL, NULL, &errmsg);
+  if (execResult != SQLITE_OK)
+  {
+    cerr << errmsg << endl;
+    cerr << "Ошибка добавления строки" << endl;
+    return;
+  }
+}
+
+void DatabaseBox::clearTable()
+{
+    string delete_query = "DELETE FROM StringsInstruments;";
+    int execResult = sqlite3_exec(Database, delete_query.c_str(), NULL, NULL, &errmsg);
+    if (execResult != SQLITE_OK)
+    {
+        cout << errmsg << endl;
+        wcout << L"Ошибка очистки таблицы" << endl;
+    }
+}
+
+
+
 #endif // MainH
