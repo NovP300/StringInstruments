@@ -33,6 +33,8 @@ public:
     virtual void Clean() { Cleaned = true; wcout << L"инструмент очищен" << endl; }
 };
 
+typedef StringInstrument * InstrPtr; // переопределение указателя на класс StringInstrument
+
 class Violin : public StringInstrument //скрипка
 {
 public:
@@ -65,7 +67,46 @@ public:
     void Play() { wcout << L"игра на виолончели..."; }
 };
 
-///////////////////////////////////
+/////////////////////////////////////////////////////////////
+//РОДИТЕЛЬСКИЙ КЛАСС КОНТЕЙНЕРОВ
+
+class InstrumentContainer
+{
+public:
+    virtual void addInstrument(InstrPtr newInstrument) = 0;
+    virtual InstrPtr getInstrument(int index) const = 0;
+    virtual int GetCount() const = 0;
+};
+
+
+class VectorContainer : public InstrumentContainer // контейнер-вектор
+{
+private:
+    vector<InstrPtr> Instruments;
+
+public:
+    void addInstrument(InstrPtr newInstrument) override { Instruments.push_back(newInstrument); }
+    int GetCount() const override { return Instruments.size(); }
+    InstrPtr getInstrument(int index) const override { return Instruments[index]; }
+};
+
+class ArrayContainer : public InstrumentContainer // контейнер-массив
+{
+private:
+    InstrPtr *Instruments;
+    int MaxSize;
+    int CurrentSize;
+
+public:
+    ArrayContainer(int maxSize); //реализация контейнера в main.cpp
+    virtual ~ArrayContainer(); //реализация деструктора в main.cpp
+    void addInstrument(InstrPtr newInstrument)  {
+        Instruments[CurrentSize] = newInstrument;
+        CurrentSize++;
+        }
+    int GetCount() const  { return CurrentSize; }
+    InstrPtr getInstrument(int index) const { return Instruments[index]; }
+};
 
 
 #endif // MainH
