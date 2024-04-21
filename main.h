@@ -301,6 +301,29 @@ struct InstrumentInfo {
 };
 
 
+class DatabaseBoxIterator : public Iterator<InstrumentInfo>
+{
+private:
+    sqlite3_stmt *pStatement;
+
+public:
+    DatabaseBoxIterator(sqlite3_stmt *statement) : pStatement(statement) {}
+    void First() { sqlite3_reset(pStatement); }
+    void Next() { sqlite3_step(pStatement); }
+    bool IsDone() const { return sqlite3_step(pStatement) != SQLITE_ROW; }
+    InstrumentInfo GetCurrent() const {
+        InstrumentInfo info;
+        // Здесь вы должны получить данные из каждого столбца результата запроса
+        // и преобразовать их в соответствующий формат InstrumentInfo
+        info.name = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(pStatement, 0));
+        info.strings_count = sqlite3_column_int(pStatement, 1);
+        info.clean = sqlite3_column_int(pStatement, 2);
+        info.tune = sqlite3_column_int(pStatement, 3);
+        return info;
+    }
+};
+
+
 class DatabaseBox
 {
 private:
@@ -320,6 +343,7 @@ public:
     }
     virtual void addRow();
     virtual void clearTable();
+    virtual Iterator<InstrumentInfo>* GetIterator();
     ~DatabaseBox() { sqlite3_close(Database); }
 };
 
@@ -359,6 +383,17 @@ void DatabaseBox::clearTable()
         cout << errmsg << endl;
         wcout << L"Ошибка очистки таблицы" << endl;
     }
+}
+
+Iterator<InstrumentInfo>* DatabaseBox::GetIterator() {
+    sqlite3_stmt* statement;
+    const char* select_query = "SELECT * FROM StringsInstruments;";
+    int prepareResult = sqlite3_prepare_v2(Database, select_query, -1, &statement, NULL);
+    if (prepareResult != SQLITE_OK) {
+        cout << "Ошибка подготовки запроса: " << sqlite3_errmsg(Database) << endl;
+        return nullptr;
+    }
+    return new DatabaseBoxIterator(statement);
 }
 
 
