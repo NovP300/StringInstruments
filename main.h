@@ -1,6 +1,8 @@
 #ifndef MainH
 #define MainH
 
+#include "Pattern.h"
+
 enum class InstrumentType: int
 {
     Violin = 0, //скрипка
@@ -12,6 +14,7 @@ enum class InstrumentType: int
 
 ///////////////////////////////////
 //РАЗДЕЛ КЛАССЫ ИНСТРУМЕНТОВ
+
 
 class StringInstrument
 {
@@ -81,6 +84,25 @@ public:
 //////////////////////////////////////////////////////////////
 //ВЕКТОР КОНТЕЙНЕР
 
+class VectorContainerIterator : public Iterator<InstrPtr>
+{
+private:
+    const vector<InstrPtr> *Instruments;
+    vector<InstrPtr>::const_iterator it;
+
+public:
+    VectorContainerIterator(const vector<InstrPtr> *instruments)
+    {
+        Instruments = instruments;
+        it = Instruments->begin();
+    }
+
+    void First() { it = Instruments->begin(); }
+    void Next() { it++; }
+    bool IsDone() const { return it == Instruments->end(); }
+    InstrPtr GetCurrent() const { return *it; }
+};
+
 class VectorContainer : public InstrumentContainer // контейнер-вектор
 {
 private:
@@ -90,10 +112,36 @@ public:
     void addInstrument(InstrPtr newInstrument) override { Instruments.push_back(newInstrument); }
     int GetCount() const override { return Instruments.size(); }
     InstrPtr getInstrument(int index) const override { return Instruments[index]; }
+
+    Iterator<InstrPtr> *GetIterator()
+    {
+        return new VectorContainerIterator(&Instruments);
+    }
 };
 
 //////////////////////////////////////////////////////////////
 //МАССИВ КОНТЕЙНЕР
+
+class ArrayContainerIterator : public Iterator<InstrPtr>
+{
+private:
+    const InstrPtr *Instruments;
+    int Size;
+    int Position;
+
+public:
+    ArrayContainerIterator(const InstrPtr *instruments, int size)
+    {
+        Instruments = instruments;
+        Size = size;
+        Position = 0;
+    }
+
+    void First() { Position = 0; }
+    void Next() { Position++; }
+    bool IsDone() const { return Position >= Size; }
+    InstrPtr GetCurrent() const { return Instruments[Position]; }
+};
 
 class ArrayContainer : public InstrumentContainer // контейнер-массив
 {
@@ -111,6 +159,11 @@ public:
         }
     int GetCount() const  { return CurrentSize; }
     InstrPtr getInstrument(int index) const { return Instruments[index]; }
+
+    Iterator<InstrPtr> *GetIterator()
+    {
+        return new ArrayContainerIterator(Instruments, MaxSize);
+    }
 };
 
 
