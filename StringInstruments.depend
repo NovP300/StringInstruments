@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1713730233 source:c:\codeblocksprojects\stringinstruments\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	"main.h"
+
+1713730337 c:\codeblocksprojects\stringinstruments\main.h
+
