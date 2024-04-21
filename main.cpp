@@ -88,14 +88,34 @@ void Task2(InstrumentContainer *Box)
 }
 
 ////////////////////////////////////////////////////////
+/////ЗАДАНИЕ ДЛЯ ПРОВЕРКИ ИТЕРАТОРА
+
+//Вывести информацию о настройке, чистоте и количестве струн
+void Task_It(Iterator<InstrPtr> *it)
+{
+    int i = 0;
+    for(it->First(); !it->IsDone(); it->Next())
+    {
+        i++;
+        cout << i << " ";
+        const InstrPtr currentInstrument = it->GetCurrent();
+        wcout<< "  "<<PrintInstrumentType(currentInstrument->GetType());
+        wcout << L"чистота инструмента: " << (currentInstrument->IsCleaned() ? L"+" : L"-") << "  "<< L" ";
+        wcout << L"настройка инструмента: " << (currentInstrument->IsTuned() ? L"+" : L"-") << " || "<< L" ";
+        wcout << L"количество струн: " << (currentInstrument->GetStringsNumber()) << endl;
+    }
+}
+
+//////////////////////////////////////////////////////////
 
 int main()
 {
     srand(static_cast<unsigned int>(time(nullptr))); // генератор случайных чисел
     setlocale(LC_ALL,"Russian");
 
-    VectorContainer Box;
-    //ArrayContainer Box(60);
+    //VectorContainer Box;
+    ArrayContainer Box(60);
+    Iterator<InstrPtr> *it = Box.GetIterator();
 
     for(int i = 0; i < 15; i++)
     {
@@ -114,10 +134,21 @@ int main()
         Box.addInstrument(new Contrabass);
     }
 
+
+
+
     //Task1(&Box);
-    Task2(&Box);
+    //Task2(&Box);
 
-
+    if(it)
+    {
+        Task_It(it);
+        delete it;
+    }
+    else
+    {
+        wcout << L"ошибка создания итератора" << endl;
+    }
 
     return 0;
 }
