@@ -34,6 +34,7 @@ public:
     virtual void Play() = 0;
     virtual void Tune()  { Tuned = true; wcout << L"инструмент настроен" << endl; }
     virtual void Clean() { Cleaned = true; wcout << L"инструмент очищен" << endl; }
+    static StringInstrument *Create(InstrumentType type); //реализация метода в main.cpp
 };
 
 typedef StringInstrument * InstrPtr; // переопределение указателя на класс StringInstrument

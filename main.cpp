@@ -106,6 +106,42 @@ void Task_It(Iterator<InstrPtr> *it)
     }
 }
 
+
+///////////////////////////////////////////////
+//ЗАДАНИЕ ДЕКОРАТОР
+
+void DecoratorTask(Iterator<InstrPtr> *it)
+{
+    for(it->First(); !it->IsDone(); it->Next())
+    {
+        const InstrPtr currentInstr = it->GetCurrent();
+        wcout << PrintInstrumentType(currentInstr->GetType()) << L" : ";
+        wcout << L" чистота" << (currentInstr->IsCleaned() ? L" +" : L" -") << " ";
+        wcout << L" настройка" << (currentInstr->IsTuned() ? L" +" : L" -") << " ";
+        wcout << L" число струн " << currentInstr->GetStringsNumber() << endl;
+    }
+}
+
+//////////////////////////////////////////////////
+
+StringInstrument *CreateInstrument(InstrumentType type)
+{
+    switch(type)
+    {
+        case InstrumentType::Violin: return new Violin;
+        case InstrumentType::Alto: return new Alto;
+        case InstrumentType::Cello: return new Cello;
+        case InstrumentType::Contrabass: return new Contrabass;
+        default: return nullptr; // Добавим обработку случая по умолчанию
+    }
+}
+
+StringInstrument *StringInstrument::Create(InstrumentType type)
+{
+    return CreateInstrument(type);
+}
+
+
 //////////////////////////////////////////////////////////
 
 int main()
@@ -113,25 +149,18 @@ int main()
     srand(static_cast<unsigned int>(time(nullptr))); // генератор случайных чисел
     setlocale(LC_ALL,"Russian");
 
-    //VectorContainer Box;
-    ArrayContainer Box(60);
-    Iterator<InstrPtr> *it = Box.GetIterator();
 
-    for(int i = 0; i < 15; i++)
+    int randomSize = rand()% 100;
+    wcout << L"в контейнер добавлено " << randomSize << L" инструментов" << endl << endl;
+
+
+    //VectorContainer Box;
+    ArrayContainer Box(randomSize);
+    //Iterator<InstrPtr> *it = Box.GetIterator();
+
+    for(int i = 0; i < randomSize; i++)
     {
-        Box.addInstrument(new Violin);
-    }
-    for(int i = 0; i < 15; i++)
-    {
-        Box.addInstrument(new Cello);
-    }
-    for(int i = 0; i < 15; i++)
-    {
-        Box.addInstrument(new Alto);
-    }
-    for(int i = 0; i < 15; i++)
-    {
-        Box.addInstrument(new Contrabass);
+        Box.addInstrument(CreateInstrument(static_cast<InstrumentType>(rand() % 4 )));
     }
 
 
@@ -140,9 +169,16 @@ int main()
     //Task1(&Box);
     //Task2(&Box);
 
+    //Декоратор: чистая, не настроенная скрипка с 2 струнами
+    Iterator<InstrPtr> *it = new InstrCleanedIteratorDecorator(
+                            new InstrTunedIteratorDecorator(
+                            new InstrStringsIteratorDecorator(
+                            new InstrTypeIteratorDecorator(Box.GetIterator(), InstrumentType::Violin), 2), false), true);
+
     if(it)
     {
-        Task_It(it);
+        DecoratorTask(it);
+        //Task_It(it);
         delete it;
     }
     else

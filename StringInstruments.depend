@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1713733409 source:c:\codeblocksprojects\stringinstruments\main.cpp
+1713734172 source:c:\codeblocksprojects\stringinstruments\main.cpp
 	<iostream>
 	<cstdlib>
 	<ctime>
 	<vector>
 	"main.h"
 
-1713733670 c:\codeblocksprojects\stringinstruments\main.h
+1713734111 c:\codeblocksprojects\stringinstruments\main.h
 	"Pattern.h"
 
 1713733706 c:\codeblocksprojects\stringinstruments\pattern.h
