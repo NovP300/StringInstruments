@@ -340,7 +340,7 @@ public:
     DatabaseBox()
     {
         openResult = sqlite3_open16(
-            L"C:\\CodeBlocksProjects\\StringInstruments\\Instruments.db",
+            L"D:\\Code Blocks Projects\\StringInstruments\\Instruments.db",
             &Database);
         if(openResult != SQLITE_OK)
         {
@@ -352,10 +352,10 @@ public:
     virtual Iterator<InstrumentInfo>* GetIterator();
     ~DatabaseBox() {
     if (Database != nullptr) {
-        sqlite3_close(Database); // закрываем базу данных только если она была открыта
+        sqlite3_close(Database);
     }
     if (statement != nullptr) {
-        sqlite3_finalize(statement); // освобождаем ресурс только если он был выделен
+        sqlite3_finalize(statement);
     }
 }
 

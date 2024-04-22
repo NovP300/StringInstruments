@@ -191,7 +191,8 @@ int main()
                             new InstrTypeIteratorDecorator(Box.GetIterator(), InstrumentType::Violin), 2), false), true);
 
     */
-    ////////БД
+    //////////////////////////////////////////////////////////////////
+    //БД
 
     DatabaseBox dbBox;
     Iterator<InstrumentInfo> *it = dbBox.GetIterator();
@@ -200,12 +201,15 @@ int main()
         dbBox.addRow();
     }
 
+    /////////////////////////////
+    //Общая проверка для итератора
+
     if(it)
     {
 
-        //Task_It(it);
-        //DecoratorTask(it);
-        Task_DB(it);
+        //Task_It(it); // Для простого итератора
+        //DecoratorTask(it); //Для декоратора
+        Task_DB(it); // Для БД
         delete it;
     }
     else
