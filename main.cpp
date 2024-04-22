@@ -164,25 +164,37 @@ int main()
     srand(static_cast<unsigned int>(time(nullptr))); // генератор случайных чисел
     setlocale(LC_ALL,"Russian");
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //ОБЩАЯ ЧАСТЬ ЗАПОЛНЕНИЯ  КОНТЕЙНЕРОВ
 
-    int randomSize = rand()% 100;
+    int randomSize = rand()% 100; //рандомный размер контейнера
     wcout << L"в контейнер добавлено " << randomSize << L" инструментов" << endl << endl;
 
+    //на выбор вектор или массив
 
     //VectorContainer Box;
     ArrayContainer Box(randomSize);
-    //Iterator<InstrPtr> *it = Box.GetIterator();
 
-    for(int i = 0; i < randomSize; i++)
+    //создание объектов в цикле
+
+     for(int i = 0; i < randomSize; i++)
     {
         Box.addInstrument(CreateInstrument(static_cast<InstrumentType>(rand() % 4 )));
     }
-
-
-
+    ////////////////////////////////////////////////////////////////////////////////////
+    //ОБЫЧНЫЕ КОНТЕЙНЕРЫ
 
     //Task1(&Box);
     //Task2(&Box);
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //ИТЕРАТОР
+
+    Iterator<InstrPtr> *it = Box.GetIterator();
+    Task_It(it);
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //ДЕКОРАТОР
 
     //Декоратор: чистая, не настроенная скрипка с 2 струнами (не всегда попадается такой набор, так что лучше запустить несколько раз)
     /*Iterator<InstrPtr> *it = new InstrCleanedIteratorDecorator(
@@ -190,9 +202,17 @@ int main()
                             new InstrStringsIteratorDecorator(
                             new InstrTypeIteratorDecorator(Box.GetIterator(), InstrumentType::Violin), 2), false), true);
 
-    */
-    //////////////////////////////////////////////////////////////////
+
+
+    DecoratorTask(it);*/
+
+    ////////////////////////////////////////////////////////////////////////////////////
     //БД
+    /*
+    for(int i = 0; i < randomSize; i++)
+    {
+        Box.addInstrument(CreateInstrument(static_cast<InstrumentType>(rand() % 4 )));
+    }
 
     DatabaseBox dbBox;
     Iterator<InstrumentInfo> *it = dbBox.GetIterator();
@@ -201,23 +221,12 @@ int main()
         dbBox.addRow();
     }
 
-    /////////////////////////////
-    //Общая проверка для итератора
+    Task_DB(it); // Для БД
 
-    if(it)
-    {
 
-        //Task_It(it); // Для простого итератора
-        //DecoratorTask(it); //Для декоратора
-        Task_DB(it); // Для БД
-        delete it;
-    }
-    else
-    {
-        wcout << L"ошибка создания итератора" << endl;
-    }
-
+    delete it;
     dbBox.clearTable();
+    */
 
     return 0;
 }
